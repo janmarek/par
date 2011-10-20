@@ -67,6 +67,26 @@ vector<int> Graph::getNeighbours(int node) const
 	return vc;
 }
 
+
+
+/**
+ * Vrati indexy sousedicich uzlu s vetsim indexem pro uzel node
+ */
+vector<int> Graph::getNeighboursWithBiggerIndex(int node) const
+{
+	vector<int> vc;
+	
+	for (int i = node + 1; i < this->size; i++)
+	{
+		if (this->map[node][i] == 1)
+		{
+			vc.push_back(i);
+		}
+	}
+
+	return vc;
+}
+
 /**
  * Zjisti, jestli tri zadane uzly tvori trojuhelnik
  */

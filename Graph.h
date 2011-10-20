@@ -12,7 +12,8 @@ public:
 	void removeEdge(int, int);
 	int getEdgeCount();
 	int getNodesCount();
-	vector<int> getNeighbours(int) const;
+	vector<int> getNeighbours(int node) const;
+	vector<int> getNeighboursWithBiggerIndex(int node) const;
 	bool testTriangle(int node1, int node2, int node3) const;
 
 private:
