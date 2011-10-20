@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 
 using namespace std;
@@ -10,9 +11,9 @@ public:
 	bool hasEdge(int, int) const;
 	void removeEdge(int, int);
 	int getEdgeCount();
+	int getNodesCount();
 
 private:
 	vector< vector<int> > map;
 	int size;
 };
-

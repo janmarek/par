@@ -44,3 +44,9 @@ int Graph::getEdgeCount()
 	return count / 2;
 }
 
+int Graph::getNodesCount()
+{
+	return this->size;
+}
+
+
