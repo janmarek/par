@@ -14,19 +14,19 @@ Graph::Graph(int size)
 
 void Graph::addEdge(int node1, int node2)
 {
-	this->map[node1][node2] = 1;
-	this->map[node2][node1] = 1;
+	map[node1][node2] = 1;
+	map[node2][node1] = 1;
 }
 
 bool Graph::hasEdge(int node1, int node2) const
 {
-	return this->map[node1][node2];
+	return map[node1][node2];
 }
 
 void Graph::removeEdge(int node1, int node2)
 {
-	this->map[node1][node2] = 0;
-	this->map[node2][node1] = 0;
+	map[node1][node2] = 0;
+	map[node2][node1] = 0;
 }
 
 int Graph::getEdgeCount()
@@ -35,7 +35,7 @@ int Graph::getEdgeCount()
 
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			if (this->map[i][j] == 1) {
+			if (map[i][j] > 0) {
 				count++;
 			}
 		}
@@ -46,7 +46,7 @@ int Graph::getEdgeCount()
 
 int Graph::getNodesCount()
 {
-	return this->size;
+	return size;
 }
 
 /**
@@ -56,29 +56,9 @@ vector<int> Graph::getNeighbours(int node) const
 {
 	vector<int> vc;
 	
-	for (int i = 0; i < this->size; i++)
+	for (int i = 0; i < size; i++)
 	{
-		if (this->map[node][i] == 1)
-		{
-			vc.push_back(i);
-		}
-	}
-
-	return vc;
-}
-
-
-
-/**
- * Vrati indexy sousedicich uzlu s vetsim indexem pro uzel node
- */
-vector<int> Graph::getNeighboursWithBiggerIndex(int node) const
-{
-	vector<int> vc;
-	
-	for (int i = node + 1; i < this->size; i++)
-	{
-		if (this->map[node][i] == 1)
+		if (map[node][i] > 0)
 		{
 			vc.push_back(i);
 		}
@@ -92,6 +72,17 @@ vector<int> Graph::getNeighboursWithBiggerIndex(int node) const
  */
 bool Graph::testTriangle(int node1, int node2, int node3) const
 {
-	return this->hasEdge(node1, node2) && this->hasEdge(node2, node3) && this->hasEdge(node1, node3);
+	return hasEdge(node1, node2) && hasEdge(node2, node3) && hasEdge(node1, node3);
+}
+
+void Graph::setEdgeFresh(int node1, int node2, bool fresh)
+{
+	// set 1 if edge is fresh or set 2
+	map[node1][node2] = map[node2][node1] = fresh ? 1 : 2;
+}
+
+int Graph::isEdgeFresh(int node1, int node2) const
+{
+	return map[node1][node2] == 1;
 }
 

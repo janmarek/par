@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	
 	GraphWalker walker;
 	
-	cout << "nodes " << g->getNodesCount() << endl;
+	cout << "nodes: " << g->getNodesCount() << ", edges: " <<  g->getEdgeCount() << endl;
 	
 	Result * res = walker.process(g);
 	

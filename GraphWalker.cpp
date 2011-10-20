@@ -13,10 +13,16 @@ Result * GraphWalker::process(Graph * graph) const
 	{
 		int node = stack.top();
 		stack.pop(); // remove node from top
-		vector<int> neighbours = graph->getNeighboursWithBiggerIndex(node);
+		vector<int> neighbours = graph->getNeighbours(node);
 		for (unsigned int i = 0; i < neighbours.size(); i++)
 		{
-			stack.push(neighbours[i]);
+			int currentChild = neighbours[i];
+			
+			if (graph->isEdgeFresh(node, currentChild))
+			{
+				graph->setEdgeFresh(node, currentChild, false);
+				stack.push(currentChild);
+			}
 		}
 		
 		// do some action
