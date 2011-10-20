@@ -5,6 +5,7 @@
 #include "asserts.cpp"
 #include "../Graph.h"
 #include "../GraphFactory.h"
+#include "../Result.h"
 
 using namespace std;
 
@@ -134,6 +135,26 @@ void testGetNeighbours()
 	cout << endl;
 }
 
+void testResultPrice()
+{
+	cout << "Test result price" << endl;
+	
+	Graph * g1 = new Graph(3);
+	g1->addEdge(0, 1);
+	g1->addEdge(0, 2);
+	
+	Graph * g2 = new Graph(3);
+	g2->addEdge(2, 1);
+	
+	Result * r = new Result(g1, g2);
+	
+	assert(r->getPrice() == 1);
+
+	delete r;
+	
+	cout << endl;
+}
+
 int main (int argc, char const* argv[])
 {
 	cout << "Graph tests" << endl << endl;
@@ -145,5 +166,8 @@ int main (int argc, char const* argv[])
 	
 	cout << endl << "Factory tests" << endl << endl;
 	testFactory();
+	
+	cout << endl << "Result tests" << endl << endl;
+	testResultPrice();
 	return 0;
 }

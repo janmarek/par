@@ -1,5 +1,5 @@
 ARGS=-Wall -pedantic
-COMMON_FILES=Graph.cpp GraphFactory.cpp
+COMMON_FILES=Graph.cpp GraphFactory.cpp GraphWalker.cpp Result.cpp
 
 program: clean
 	g++ ${ARGS} ${COMMON_FILES} main.cpp -o bin/program
