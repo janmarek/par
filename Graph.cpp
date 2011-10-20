@@ -49,4 +49,29 @@ int Graph::getNodesCount()
 	return this->size;
 }
 
+/**
+ * Vrati indexy sousedicich uzlu pro uzel node
+ */
+vector<int> Graph::getNeighbours(int node) const
+{
+	vector<int> vc;
+	
+	for (int i = 0; i < this->size; i++)
+	{
+		if (this->map[node][i] == 1)
+		{
+			vc.push_back(i);
+		}
+	}
+
+	return vc;
+}
+
+/**
+ * Zjisti, jestli tri zadane uzly tvori trojuhelnik
+ */
+bool Graph::testTriangle(int node1, int node2, int node3) const
+{
+	return this->hasEdge(node1, node2) && this->hasEdge(node2, node3) && this->hasEdge(node1, node3);
+}
 

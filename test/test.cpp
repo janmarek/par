@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <vector>
 #include "asserts.cpp"
 #include "../Graph.h"
 #include "../GraphFactory.h"
@@ -89,11 +90,60 @@ void testFactory()
 	cout << endl;
 }
 
+void testTestTriangle()
+{
+	cout << "Test triangle" << endl;
+	
+	Graph * g = new Graph(4);
+	
+	assertFalse(g->testTriangle(0, 1, 3));
+	
+	g->addEdge(0, 1);
+	g->addEdge(0, 2);
+	g->addEdge(2, 1);
+	
+	assertTrue(g->testTriangle(0, 1, 2));
+
+	delete g;
+	
+	cout << endl;
+}
+
+void testGetNeighbours()
+{
+	cout << "Test get neighbours" << endl;
+	
+	Graph * g = new Graph(4);
+	
+	vector<int> vc = g->getNeighbours(0);
+	
+	assert(vc.size() == 0);
+	
+	g->addEdge(0, 1);
+	g->addEdge(0, 2);
+	g->addEdge(2, 1);
+	
+	vector<int> vc2 = g->getNeighbours(0);
+	
+	assert(vc2.size() == 2);
+	assert(vc2[0] == 1);
+	assert(vc2[1] == 2);
+
+	delete g;
+	
+	cout << endl;
+}
+
 int main (int argc, char const* argv[])
 {
+	cout << "Graph tests" << endl << endl;
 	testAddAndHasEdge();
 	testRemoveEdge();
 	testEdgeCount();
+	testTestTriangle();
+	testGetNeighbours();
+	
+	cout << endl << "Factory tests" << endl << endl;
 	testFactory();
 	return 0;
 }
