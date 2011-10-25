@@ -3,34 +3,40 @@
 #include <iostream>
 #include "Graph.h"
 #include "GraphWalker.h"
+#include "Solutions.h"
+#include "Solution.h"
 
-Result * GraphWalker::process(Graph * graph) const
+Solution GraphWalker::process(Graph * graph)
 {
-	stack<int> stack;
-	stack.push(0);
-	
-	while (!stack.empty())
-	{
-		int node = stack.top();
-		stack.pop(); // remove node from top
-		vector<int> neighbours = graph->getNeighbours(node);
-		for (unsigned int i = 0; i < neighbours.size(); i++)
-		{
-			int currentChild = neighbours[i];
-			
-			if (graph->isEdgeFresh(node, currentChild))
-			{
-				graph->setEdgeFresh(node, currentChild, false);
-				stack.push(currentChild);
-			}
-		}
-		
-		// do some action
-		std::cout << "at node " << node << std::endl;
-	}
-	
-	// todo replace with real value
-	return new Result(new Graph(3), new Graph(3));
+    Solutions * solutions = new Solutions(graph);   
+    int previousNode = 0;
+    stack<int> stack;
+    stack.push(0);
+    
+    while (!stack.empty())
+    {
+            int node = stack.top();
+            stack.pop(); // remove node from top
+            vector<int> neighbours = graph->getNeighbours(node);
+            for (unsigned int i = 0; i < neighbours.size(); i++)
+            {
+                    int currentChild = neighbours[i];
+
+                    if (graph->isEdgeFresh(node, currentChild))
+                    {
+                            graph->setEdgeFresh(node, currentChild, false);
+                            stack.push(currentChild);
+                    }
+            }
+            if (previousNode != node)
+            {
+                solutions->AddEdge(previousNode, node);
+            }
+            std::cout << "at node " << node << std::endl;
+            previousNode = node;
+    }
+    // todo replace with real value
+    return solutions->bestSolution;    
 }
 
 

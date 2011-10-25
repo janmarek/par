@@ -15,12 +15,11 @@ int main(int argc, char *argv[])
 	GraphWalker walker;
 	
 	cout << "nodes: " << g->getNodesCount() << ", edges: " <<  g->getEdgeCount() << endl;
+	        
+	Solution sol = walker.process(g);
 	
-	Result * res = walker.process(g);
 	
-	// v tom resultu je zatim jen nejaka blbost, tak ho ani nevypisuju
-	
-	delete res;
+	//delete sol;
 	delete g;
 	return 0;
 }
