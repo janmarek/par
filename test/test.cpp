@@ -8,6 +8,7 @@
 #include "../Solution.h"
 #include "../EdgeCombination.h"
 #include "../Color.cpp"
+#include "../CombinationIterator.h"
 
 using namespace std;
 
@@ -253,6 +254,38 @@ void testCombinationCounts()
 	cout << endl;
 }
 
+void testIterator()
+{
+	cout << "Test iterator" << endl;
+	
+	Color arrMax [] = {RED, YELLOW, YELLOW, YELLOW};
+	Color arrOne [] = {RED, RED, RED, YELLOW};
+	
+	EdgeCombination * c = new EdgeCombination(4);
+	EdgeCombination * one = new EdgeCombination(4, arrOne);
+	EdgeCombination * cMax = new EdgeCombination(4, arrMax);
+	
+	CombinationIterator * it = new CombinationIterator(c, cMax);
+	
+	EdgeCombination * next = it->next();
+	assert(next->equals(it->getCurrent()));
+	assert(next->equals(one));
+	
+	int counter = 0;
+	
+	while (it->hasNext()) {
+		it->next();
+		counter++;
+	}
+
+	assert(counter == 6);
+	
+	delete it;
+	delete one;
+	
+	cout << endl;
+}
+
 int main (int argc, char const* argv[])
 {
 	cout << "Graph tests" << endl << endl;
@@ -270,5 +303,9 @@ int main (int argc, char const* argv[])
 	testCombinationIncrement();
 	testCombinationOperators();
 	testCombinationCounts();
+	
+	cout << endl << "Iterator tests" << endl << endl;
+	testIterator();
+	
 	return 0;
 }
