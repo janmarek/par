@@ -6,6 +6,8 @@
 #include "../Graph.h"
 #include "../GraphFactory.h"
 #include "../Result.h"
+#include "../EdgeCombination.h"
+#include "../Color.cpp"
 
 using namespace std;
 
@@ -155,6 +157,100 @@ void testResultPrice()
 	cout << endl;
 }
 
+void testCombination()
+{
+	cout << "Test combination" << endl;
+	
+	Color arr [] = {YELLOW, YELLOW, RED};
+	
+	EdgeCombination combination(3, arr);
+	
+	assert(combination.isRed(0));
+	assert(combination.getColor(1) == YELLOW);
+	assert(combination.isYellow(2));
+	
+/*	EdgeCombination combination2(2);
+	
+	assert(combination2.isRed(0));
+	assert(combination2.isRed(1));*/
+	
+	cout << endl;
+}
+
+void testCombinationIncrement()
+{
+	cout << "Test combination increment" << endl;
+	
+	EdgeCombination combination(3);
+	
+	combination++;
+	assert(combination.isYellow(0));
+	assert(combination.isRed(1));
+	assert(combination.isRed(2));
+	
+	combination++;
+	assert(combination.isRed(0));
+	assert(combination.isYellow(1));
+	assert(combination.isRed(2));
+	
+	combination++;
+	assert(combination.isYellow(0));
+	assert(combination.isYellow(1));
+	assert(combination.isRed(2));
+	
+	combination++;
+	assert(combination.isRed(0));
+	assert(combination.isRed(1));
+	assert(combination.isYellow(2));
+	
+	combination++;
+	assert(combination.isYellow(0));
+	assert(combination.isRed(1));
+	assert(combination.isYellow(2));
+	
+	combination++;
+	assert(combination.isRed(0));
+	assert(combination.isYellow(1));
+	assert(combination.isYellow(2));
+	
+	combination++;
+	assert(combination.isYellow(0));
+	assert(combination.isYellow(1));
+	assert(combination.isYellow(2));
+	
+	combination++;
+	assert(combination.isRed(0));
+	assert(combination.isRed(1));
+	assert(combination.isRed(2));
+	
+	cout << endl;
+}
+
+
+
+void testCombinationOperators()
+{
+	cout << "Test combination operators" << endl;
+	
+	EdgeCombination c(2);
+	
+	Color arr [] = {RED, RED};
+	
+	EdgeCombination c2(2, arr);
+	
+	assert(c == c2);
+	c2++;
+	assert(c != c2);
+	c2++;
+	assert(c != c2);
+	c2++;
+	assert(c != c2);
+	c2++;
+	assert(c == c2);
+	
+	cout << endl;
+}
+
 int main (int argc, char const* argv[])
 {
 	cout << "Graph tests" << endl << endl;
@@ -169,5 +265,10 @@ int main (int argc, char const* argv[])
 	
 	cout << endl << "Result tests" << endl << endl;
 	testResultPrice();
+	
+	cout << endl << "Combination tests" << endl << endl;
+	testCombination();
+	testCombinationIncrement();
+	testCombinationOperators();
 	return 0;
 }
