@@ -5,7 +5,7 @@
 #include "asserts.cpp"
 #include "../Graph.h"
 #include "../GraphFactory.h"
-#include "../Result.h"
+#include "../Solution.h"
 #include "../EdgeCombination.h"
 #include "../Color.cpp"
 
@@ -137,42 +137,25 @@ void testGetNeighbours()
 	cout << endl;
 }
 
-void testResultPrice()
-{
-	cout << "Test result price" << endl;
-	
-	Graph * g1 = new Graph(3);
-	g1->addEdge(0, 1);
-	g1->addEdge(0, 2);
-	
-	Graph * g2 = new Graph(3);
-	g2->addEdge(2, 1);
-	
-	Result * r = new Result(g1, g2);
-	
-	assert(r->getPrice() == 1);
-
-	delete r;
-	
-	cout << endl;
-}
-
 void testCombination()
 {
 	cout << "Test combination" << endl;
 	
 	Color arr [] = {YELLOW, YELLOW, RED};
 	
-	EdgeCombination combination(3, arr);
+	EdgeCombination * combination = new EdgeCombination(3, arr);
 	
-	assert(combination.isRed(0));
-	assert(combination.getColor(1) == YELLOW);
-	assert(combination.isYellow(2));
+	assert(combination->isRed(0));
+	assert(combination->getColor(1) == YELLOW);
+	assert(combination->isYellow(2));
 	
-	EdgeCombination combination2(2);
+	EdgeCombination * combination2 = new EdgeCombination(2);
 	
-	assert(combination2.isRed(0));
-	assert(combination2.isRed(1));
+	assert(combination2->isRed(0));
+	assert(combination2->isRed(1));
+	
+	delete combination;
+	delete combination2;
 	
 	cout << endl;
 }
@@ -181,47 +164,49 @@ void testCombinationIncrement()
 {
 	cout << "Test combination increment" << endl;
 	
-	EdgeCombination combination(3);
+	EdgeCombination * combination = new EdgeCombination(3);
 	
-	combination++;
-	assert(combination.isYellow(0));
-	assert(combination.isRed(1));
-	assert(combination.isRed(2));
+	combination->increment();
+	assert(combination->isYellow(0));
+	assert(combination->isRed(1));
+	assert(combination->isRed(2));
 	
-	combination++;
-	assert(combination.isRed(0));
-	assert(combination.isYellow(1));
-	assert(combination.isRed(2));
+	combination->increment();
+	assert(combination->isRed(0));
+	assert(combination->isYellow(1));
+	assert(combination->isRed(2));
 	
-	combination++;
-	assert(combination.isYellow(0));
-	assert(combination.isYellow(1));
-	assert(combination.isRed(2));
+	combination->increment();
+	assert(combination->isYellow(0));
+	assert(combination->isYellow(1));
+	assert(combination->isRed(2));
 	
-	combination++;
-	assert(combination.isRed(0));
-	assert(combination.isRed(1));
-	assert(combination.isYellow(2));
+	combination->increment();
+	assert(combination->isRed(0));
+	assert(combination->isRed(1));
+	assert(combination->isYellow(2));
 	
-	combination++;
-	assert(combination.isYellow(0));
-	assert(combination.isRed(1));
-	assert(combination.isYellow(2));
+	combination->increment();
+	assert(combination->isYellow(0));
+	assert(combination->isRed(1));
+	assert(combination->isYellow(2));
 	
-	combination++;
-	assert(combination.isRed(0));
-	assert(combination.isYellow(1));
-	assert(combination.isYellow(2));
+	combination->increment();
+	assert(combination->isRed(0));
+	assert(combination->isYellow(1));
+	assert(combination->isYellow(2));
 	
-	combination++;
-	assert(combination.isYellow(0));
-	assert(combination.isYellow(1));
-	assert(combination.isYellow(2));
+	combination->increment();
+	assert(combination->isYellow(0));
+	assert(combination->isYellow(1));
+	assert(combination->isYellow(2));
 	
-	combination++;
-	assert(combination.isRed(0));
-	assert(combination.isRed(1));
-	assert(combination.isRed(2));
+	combination->increment();
+	assert(combination->isRed(0));
+	assert(combination->isRed(1));
+	assert(combination->isRed(2));
+	
+	delete combination;
 	
 	cout << endl;
 }
@@ -230,21 +215,40 @@ void testCombinationOperators()
 {
 	cout << "Test combination operators" << endl;
 	
-	EdgeCombination c(2);
+	EdgeCombination * c = new EdgeCombination(2);
 	
 	Color arr [] = {RED, RED};
 	
-	EdgeCombination c2(2, arr);
+	EdgeCombination * c2 = new EdgeCombination(2, arr);
 	
-	assert(c == c2);
-	c2++;
-	assert(c != c2);
-	c2++;
-	assert(c != c2);
-	c2++;
-	assert(c != c2);
-	c2++;
-	assert(c == c2);
+	assert(c->equals(c2));
+	c2->increment();
+	assertFalse(c->equals(c2));
+	c2->increment();
+	assertFalse(c->equals(c2));
+	c2->increment();
+	assertFalse(c->equals(c2));
+	c2->increment();
+	assert(c->equals(c2));
+	
+	delete c;
+	delete c2;
+	
+	cout << endl;
+}
+
+void testCombinationCounts()
+{
+	cout << "Test combination counts" << endl;
+	
+	Color arr [] = {RED, RED, YELLOW, RED, YELLOW};
+	
+	EdgeCombination * c = new EdgeCombination(5, arr);
+	
+	assert(c->getYellowCount() == 2);
+	assert(c->getRedCount() == 3);
+	
+	delete c;
 	
 	cout << endl;
 }
@@ -261,12 +265,10 @@ int main (int argc, char const* argv[])
 	cout << endl << "Factory tests" << endl << endl;
 	testFactory();
 	
-	cout << endl << "Result tests" << endl << endl;
-	testResultPrice();
-	
 	cout << endl << "Combination tests" << endl << endl;
 	testCombination();
 	testCombinationIncrement();
 	testCombinationOperators();
+	testCombinationCounts();
 	return 0;
 }

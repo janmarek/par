@@ -14,12 +14,9 @@ public:
 	
 	int getSize() const;
 	
-	// overloaded combination++ operator
-	const EdgeCombination * operator++(int);
+	void increment();
 	
-	bool operator==(const EdgeCombination &c) const;
-	
-	bool operator!=(const EdgeCombination &c) const;
+	bool equals(const EdgeCombination * c) const;
 	
 	Color getColor(int edge) const;
 	
@@ -28,6 +25,10 @@ public:
 	bool isRed(int edge) const;
 	
 	bool isYellow(int edge) const;
+	
+	int getYellowCount() const;
+	
+	int getRedCount() const;
 
 private:
 	// combination

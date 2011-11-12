@@ -31,8 +31,7 @@ int EdgeCombination::getSize() const
 	return size;
 }
 
-// overloaded combination++ operator
-const EdgeCombination * EdgeCombination::operator++(int)
+void EdgeCombination::increment()
 {
 	for (int i = 0; i < size; i++) {
 		if (isRed(i)) {
@@ -42,39 +41,22 @@ const EdgeCombination * EdgeCombination::operator++(int)
 			setColor(i, RED);
 		}
 	}
-	return this;
 }
 	
-bool EdgeCombination::operator==(const EdgeCombination &c) const
+bool EdgeCombination::equals(const EdgeCombination * c) const
 {
-	if (this->size != c.size) {
+	if (this->size != c->size) {
 		return false;
 	}
 	
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < this->size; i++)
 	{
-		if (this->combination[i] != c.combination[i]) {
+		if (this->combination[i] != c->combination[i]) {
 			return false;
 		}
 	}
 	
 	return true;
-}
-
-bool EdgeCombination::operator!=(const EdgeCombination &c) const
-{
-	if (this->size != c.size) {
-		return true;
-	}
-	
-	for (int i = 0; i < size; i++)
-	{
-		if (this->combination[i] != c.combination[i]) {
-			return true;
-		}
-	}
-	
-	return false;
 }
 
 bool EdgeCombination::isRed(int edge) const
@@ -95,4 +77,22 @@ Color EdgeCombination::getColor(int edge) const
 void EdgeCombination::setColor(int edge, Color color)
 {
 	combination[edge] = color;
+}
+
+int EdgeCombination::getYellowCount() const
+{
+	int count = 0;
+	
+	for (int i = 0; i < size; i++) {
+		if (isYellow(i)) {
+			count++;
+		}
+	}
+	
+	return count;
+}
+
+int EdgeCombination::getRedCount() const
+{
+	return size - getYellowCount();
 }

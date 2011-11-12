@@ -29,16 +29,10 @@ public:
 
 	// zjisti, jestli tri uzly tvori trojuhelnik
 	bool testTriangle(int node1, int node2, int node3) const;
-	
-	// nastav hranu z uzlu do uzlu (ne)cerstvou
-	void setEdgeFresh(int node1, int node2, bool fresh);
-	
-	// je hrana z uzlu do uzlu cerstva?
-	int isEdgeFresh(int node1, int node2) const;
 
 private:
 	// matice sousednosti (0 - neni hrana, 1 - cerstva hrana, 2 - necerstva hrana)
-	vector< vector<int> > map;
+	vector< vector<bool> > map;
 	
 	// pocet uzlu grafu
 	int size;
