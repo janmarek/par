@@ -23,7 +23,7 @@ EdgeCombination::EdgeCombination(int size)
 
 EdgeCombination::~EdgeCombination()
 {
-//	delete [] combination;
+	delete [] combination;
 }
 
 int EdgeCombination::getSize() const
@@ -32,7 +32,7 @@ int EdgeCombination::getSize() const
 }
 
 // overloaded combination++ operator
-const EdgeCombination EdgeCombination::operator++(int)
+const EdgeCombination * EdgeCombination::operator++(int)
 {
 	for (int i = 0; i < size; i++) {
 		if (isRed(i)) {
@@ -42,7 +42,7 @@ const EdgeCombination EdgeCombination::operator++(int)
 			setColor(i, RED);
 		}
 	}
-	return *this;
+	return this;
 }
 	
 bool EdgeCombination::operator==(const EdgeCombination &c) const

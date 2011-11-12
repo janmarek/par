@@ -15,7 +15,7 @@ public:
 	int getSize() const;
 	
 	// overloaded combination++ operator
-	const EdgeCombination operator++(int);
+	const EdgeCombination * operator++(int);
 	
 	bool operator==(const EdgeCombination &c) const;
 	

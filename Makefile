@@ -1,4 +1,4 @@
-ARGS=-Wall -pedantic
+ARGS=-Wall -pedantic -g
 COMMON_FILES=Graph.cpp GraphFactory.cpp GraphWalker.cpp Result.cpp EdgeCombination.cpp
 
 program: clean
