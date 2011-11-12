@@ -4,15 +4,26 @@
 EdgeCombination::EdgeCombination(int size, Color * combination)
 {
 	this->size = size;
-	this->combination = combination;
+	this->combination = new Color[size];
+	
+	for (int i = 0; i < size; i++) {
+		setColor(size - 1 - i, combination[i]);
+	}
 }
 
 EdgeCombination::EdgeCombination(int size)
 {
-	this->size = size;
+	this->size = size;	
+	combination = new Color[size];
+	
 	for (int i = 0; i < size; i++) {
 		combination[i] = RED;
 	}
+}
+
+EdgeCombination::~EdgeCombination()
+{
+//	delete [] combination;
 }
 
 int EdgeCombination::getSize() const
@@ -78,10 +89,10 @@ bool EdgeCombination::isYellow(int edge) const
 
 Color EdgeCombination::getColor(int edge) const
 {
-	return combination[size - 1 - edge];
+	return combination[edge];
 }
 
 void EdgeCombination::setColor(int edge, Color color)
 {
-	combination[size - 1 - edge] = color;
+	combination[edge] = color;
 }

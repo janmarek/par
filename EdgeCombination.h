@@ -7,6 +7,8 @@ public:
 	// konstruktor, size je velikost grafu, EdgeCombination
 	EdgeCombination(int size, Color * combination);
 	
+	~EdgeCombination();
+	
 	// začne na první kombinace (všechny hrany false)
 	EdgeCombination(int size);
 	

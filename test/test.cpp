@@ -169,10 +169,10 @@ void testCombination()
 	assert(combination.getColor(1) == YELLOW);
 	assert(combination.isYellow(2));
 	
-/*	EdgeCombination combination2(2);
+	EdgeCombination combination2(2);
 	
 	assert(combination2.isRed(0));
-	assert(combination2.isRed(1));*/
+	assert(combination2.isRed(1));
 	
 	cout << endl;
 }
@@ -225,8 +225,6 @@ void testCombinationIncrement()
 	
 	cout << endl;
 }
-
-
 
 void testCombinationOperators()
 {
