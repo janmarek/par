@@ -17,6 +17,16 @@ void Graph::addEdge(int node1, int node2)
 {
 	map[node1][node2] = true;
 	map[node2][node1] = true;
+        // pripocita se nova hrana jen pokud je cerstva
+        if (node1 < node2 )
+        {
+            // souradnice hrany pro snazsi vypocet trojuhelnikovosti;
+            this->edgeCount++;
+            vector<int> edge(2, 0);
+            edge[0] = node1;
+            edge[1] = node2;        
+            this->edges.push_back(edge);
+        }
 }
 
 bool Graph::hasEdge(int node1, int node2) const
@@ -32,6 +42,8 @@ void Graph::removeEdge(int node1, int node2)
 
 int Graph::getEdgeCount()
 {
+    return this->edgeCount;
+    /*
 	int count = 0;
 
 	for (int i = 0; i < size; i++) {
@@ -43,6 +55,7 @@ int Graph::getEdgeCount()
 	}
 
 	return count / 2;
+     */
 }
 
 int Graph::getNodesCount()
@@ -77,8 +90,50 @@ bool Graph::testTriangle(int node1, int node2, int node3) const
 }
 
 bool Graph::testTriangleOk(EdgeCombination * c) const
+{    
+    for (unsigned int i = 0; i < this->edges.size(); i++)
+    {
+        int node1 = edges[i][0];
+        int node2 = edges[i][1];
+        if (!this->testEdge(node1, node2, c, c->getColor(i), i))      
+        {
+            return false;
+        }
+    }
+    return true;
+}
+// otestuje hranu, zda patri do uzloveho trojuhelniku v grafu
+bool Graph::testEdge(int node1, int node2, EdgeCombination * c, Color colorToBeTested, unsigned int currEdge) const
 {
-	// TODO
-	return true;
+    vector<int> neigbours = this->getNeighbours(node1);
+    for (unsigned int i = 0; i < neigbours.size(); i++)
+    {        
+        if (neigbours[i] != node2 && this->testTriangle(node1, node2, neigbours[i]))
+        {                         
+            int stopUpToTwo = 0; // jednu hranu mame, hledame 2 dalsi stejne barvy
+            int currEdgeNode1 = this->edges[currEdge][0];
+            int currEdgeNode2 = this->edges[currEdge][1];
+            
+            for (unsigned int j = 0; j < this->edges.size(); j++)
+            {
+                if (j!= currEdge)
+                {
+                    if (currEdgeNode1 == node1 && currEdgeNode2 == neigbours[i] && c->getColor(j) == colorToBeTested)
+                    {
+                        stopUpToTwo++;
+                    }
+                    if (currEdgeNode1 == node2 && currEdgeNode2 == neigbours[i] && c->getColor(j) == colorToBeTested)
+                    {
+                        stopUpToTwo++;
+                    }
+                }
+                if (stopUpToTwo > 1)
+                {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
 }
 

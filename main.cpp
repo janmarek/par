@@ -34,8 +34,7 @@ int main(int argc, char *argv[])
 	EdgeCombination * max = EdgeCombination::createMaxCombination(edgeCount);
 	
 	// iterator from c to max
-	CombinationIterator * it = new CombinationIterator(c, max);
-	
+	CombinationIterator * it = new CombinationIterator(c, max);	
 	do {
 		// create solution: graph is shared instance, combination instance is cloned
 		Solution * s = new Solution(g, it->getCurrent()->clone());
