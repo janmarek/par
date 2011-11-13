@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include <vector>
+#include "EdgeCombination.h"
 
 using namespace std;
 
@@ -73,5 +74,11 @@ vector<int> Graph::getNeighbours(int node) const
 bool Graph::testTriangle(int node1, int node2, int node3) const
 {
 	return hasEdge(node1, node2) && hasEdge(node2, node3) && hasEdge(node1, node3);
+}
+
+bool Graph::testTriangleOk(EdgeCombination * c) const
+{
+	// TODO
+	return true;
 }
 

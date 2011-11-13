@@ -7,10 +7,16 @@ public:
 	// konstruktor, size je velikost grafu, EdgeCombination
 	EdgeCombination(int size, Color * combination);
 	
+	// začne na první kombinace (všechny hrany RED)
+	EdgeCombination(int size);
+	
+	EdgeCombination(const EdgeCombination &);
+	
 	~EdgeCombination();
 	
-	// začne na první kombinace (všechny hrany false)
-	EdgeCombination(int size);
+	EdgeCombination * clone() const;
+	
+	static EdgeCombination * createMaxCombination(int size);
 	
 	int getSize() const;
 	

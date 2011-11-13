@@ -254,6 +254,24 @@ void testCombinationCounts()
 	cout << endl;
 }
 
+void testCombinationClone()
+{
+	cout << "Test combination clone" << endl;
+	
+	Color arr [] = {RED, RED, YELLOW, RED, YELLOW};
+	
+	EdgeCombination * c = new EdgeCombination(5, arr);
+	EdgeCombination * cloned = c->clone();
+	
+	assert(c->equals(cloned));
+	assert(c != cloned);
+	
+	delete c;
+	delete cloned;
+	
+	cout << endl;
+}
+
 void testIterator()
 {
 	cout << "Test iterator" << endl;
@@ -303,6 +321,7 @@ int main (int argc, char const* argv[])
 	testCombinationIncrement();
 	testCombinationOperators();
 	testCombinationCounts();
+	testCombinationClone();
 	
 	cout << endl << "Iterator tests" << endl << endl;
 	testIterator();

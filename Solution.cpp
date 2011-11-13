@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdlib.h>
 #include "Graph.h"
 #include "Solution.h"
@@ -11,7 +12,7 @@ Solution::Solution(Graph * g, EdgeCombination * c)
 
 Solution::~Solution()
 {
-	delete graph;
+	delete combination;
 }
 
 Graph * Solution::getGraph() const
@@ -32,4 +33,5 @@ int Solution::getPrice() const
 void Solution::print() const
 {
 	// TODO
+	std::cout << "Solution has price " << getPrice() << std::endl;
 }

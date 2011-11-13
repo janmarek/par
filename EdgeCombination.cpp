@@ -21,6 +21,33 @@ EdgeCombination::EdgeCombination(int size)
 	}
 }
 
+EdgeCombination::EdgeCombination(const EdgeCombination & copied)
+{
+	this->size = copied.size;
+	this->combination = new Color[copied.size];
+	
+	for (int i = 0; i < copied.size; i++) {
+		this->setColor(i, copied.getColor(i));
+	}
+}
+
+EdgeCombination * EdgeCombination::createMaxCombination(int size)
+{
+	EdgeCombination * c = new EdgeCombination(size);
+	
+	for (int i = 0; i < size; i++)
+	{
+		c->setColor(i, YELLOW);
+	}
+	
+	return c;
+}
+
+EdgeCombination * EdgeCombination::clone() const
+{
+	return new EdgeCombination(*this);
+}
+
 EdgeCombination::~EdgeCombination()
 {
 	delete [] combination;

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "EdgeCombination.h"
 
 using namespace std;
 
@@ -29,6 +30,8 @@ public:
 
 	// zjisti, jestli tri uzly tvori trojuhelnik
 	bool testTriangle(int node1, int node2, int node3) const;
+	
+	bool testTriangleOk(EdgeCombination *) const;
 
 private:
 	// matice sousednosti (0 - neni hrana, 1 - cerstva hrana, 2 - necerstva hrana)
