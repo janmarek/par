@@ -16,9 +16,12 @@ Graph * GraphFactory::createFromStream(std::istream & stream) const {
 	{
 		for (unsigned int j = 0; j < size; j++)
 		{
-			stream.get(ch);
+			stream.get(ch);                        
 			if (ch == '1') {
-				graph->addEdge(i, j);
+                            if (i < j)
+                            {
+				graph->addEdge(i, j);                               
+                            }
 			}
 		}
 		stream.get(ch); // new line

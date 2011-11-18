@@ -17,16 +17,16 @@ void Graph::addEdge(int node1, int node2)
 {
 	map[node1][node2] = true;
 	map[node2][node1] = true;
-        // pripocita se nova hrana jen pokud je cerstva
-        if (node1 < node2 )
-        {
-            // souradnice hrany pro snazsi vypocet trojuhelnikovosti;
-            this->edgeCount++;
-            vector<int> edge(2, 0);
-            edge[0] = node1;
-            edge[1] = node2;        
-            this->edges.push_back(edge);
-        }
+        // souradnice hrany pro snazsi vypocet trojuhelnikovosti;
+        this->edgeCount++;
+        vector<int> edge(2, 0);
+        edge[0] = node1;
+        edge[1] = node2;        
+        this->edges.push_back(edge);
+}
+vector<int> Graph::getEdge(int edgeNumber)
+{
+    return this->edges[edgeNumber];
 }
 
 bool Graph::hasEdge(int node1, int node2) const
@@ -110,19 +110,16 @@ bool Graph::testEdge(int node1, int node2, EdgeCombination * c, Color colorToBeT
     {        
         if (neigbours[i] != node2 && this->testTriangle(node1, node2, neigbours[i]))
         {                         
-            int stopUpToTwo = 0; // jednu hranu mame, hledame 2 dalsi stejne barvy
-            int currEdgeNode1 = this->edges[currEdge][0];
-            int currEdgeNode2 = this->edges[currEdge][1];
-            
+            int stopUpToTwo = 0; // jednu hranu mame, hledame 2 dalsi stejne barvy            
             for (unsigned int j = 0; j < this->edges.size(); j++)
             {
                 if (j!= currEdge)
                 {
-                    if (currEdgeNode1 == node1 && currEdgeNode2 == neigbours[i] && c->getColor(j) == colorToBeTested)
+                    if (((edges[j][0] == node1 && edges[j][1] == neigbours[i]) | (edges[j][0] == neigbours[i] && edges[j][1] == node1))  && c->getColor(j) == colorToBeTested)                                            
                     {
                         stopUpToTwo++;
                     }
-                    if (currEdgeNode1 == node2 && currEdgeNode2 == neigbours[i] && c->getColor(j) == colorToBeTested)
+                    if (((edges[j][0] == node2 && edges[j][1] == neigbours[i]) | (edges[j][0] == neigbours[i] && edges[j][1] == node2)) && c->getColor(j) == colorToBeTested)
                     {
                         stopUpToTwo++;
                     }

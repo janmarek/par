@@ -12,6 +12,8 @@ public:
 	
 	// pridej hranu z uzlu do uzlu
 	void addEdge(int, int);
+        
+        vector<int> getEdge(int);
 	
 	// je pritomna hrana z uzlu do uzlu?
 	bool hasEdge(int, int) const;
@@ -33,6 +35,7 @@ public:
 	
 	bool testTriangleOk(EdgeCombination *) const;
         bool testEdge(int, int, EdgeCombination *, Color, unsigned int) const;
+        
 
 private:        
 	// matice sousednosti (0 - neni hrana, 1 - cerstva hrana, 2 - necerstva hrana)

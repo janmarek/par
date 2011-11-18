@@ -32,6 +32,13 @@ int Solution::getPrice() const
 
 void Solution::print() const
 {
-	// TODO
-	std::cout << "Solution has price " << getPrice() << std::endl;
+    std::cout << "Solution: ";
+    for ( int i = 0; i < this->combination->getSize(); i++)
+    {
+        Color col = this->combination->getColor(i);
+        vector<int> edge = this->graph->getEdge(i);
+        std::cout << "E" << col << ":" << edge[0] << "," << edge[1] << "; ";
+    }
+    
+	std::cout << std::endl << "Solution has price " << getPrice() << std::endl;
 }
