@@ -66,7 +66,7 @@ int main(int argc, char **argv)
                 if (i == myRank) // zpracovava pouze proces cislo myRank / hlavni proces 0 neresi vypocty
                 {
                     edgeStart = edgeEnd + 1;                    
-                    edgeEnd =  edgeStart + oneProcessWork - 1;                    
+                    edgeEnd =  edgeStart + oneProcessWork;                    
                     EdgeCombination * c = new EdgeCombination(edgeCount, edgeStart);
                     EdgeCombination * max = new EdgeCombination(edgeCount, edgeEnd);        
                     doSearch(c, max);

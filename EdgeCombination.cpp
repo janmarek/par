@@ -25,15 +25,14 @@ EdgeCombination::EdgeCombination(int size, int edgeYellow)
 {
     this->size = size;	
     combination = new Color[size];
-    for (int i = 0; i <= edgeYellow; i++)
+    for (int i = 0; i < edgeYellow; i++)
     {
         combination[i] = YELLOW;
     }    
-    for (int i = edgeYellow + 1; i < size; i++) {        
+    for (int i = edgeYellow; i < size; i++) {        
             combination[i] = RED;
     }
 }
-
 
 EdgeCombination::EdgeCombination(const EdgeCombination & copied)
 {
