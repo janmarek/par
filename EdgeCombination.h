@@ -9,6 +9,7 @@ public:
 	
 	// začne na první kombinace (všechny hrany RED)
 	EdgeCombination(int size);
+        EdgeCombination(int size, int);
 	
 	EdgeCombination(const EdgeCombination &);
 	

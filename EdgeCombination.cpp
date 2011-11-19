@@ -20,6 +20,20 @@ EdgeCombination::EdgeCombination(int size)
 		combination[i] = RED;
 	}
 }
+// zacina se z jiz predvyplnenymi zlutymi kombinacemi
+EdgeCombination::EdgeCombination(int size, int edgeYellow)
+{
+    this->size = size;	
+    combination = new Color[size];
+    for (int i = 0; i <= edgeYellow; i++)
+    {
+        combination[i] = YELLOW;
+    }    
+    for (int i = edgeYellow + 1; i < size; i++) {        
+            combination[i] = RED;
+    }
+}
+
 
 EdgeCombination::EdgeCombination(const EdgeCombination & copied)
 {
