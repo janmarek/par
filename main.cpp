@@ -14,6 +14,8 @@ Solution * myBestSolution;
 int bestSolutionPossible;
 Graph * g;
 
+void doSearch(EdgeCombination * c, EdgeCombination * max);
+
 // main
 // nelze nacitat grafy pres <, nutno pouzit paramater
 int main(int argc, char **argv)
@@ -26,6 +28,12 @@ int main(int argc, char **argv)
         MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
         // Ulozi do p pocet dostupnych procesu
         MPI_Comm_size(MPI_COMM_WORLD, &p);
+        
+        cout << "process " << myRank << "/" << p << endl;
+        
+        // Finalizace MPI - zadma MPI funkce nesmi byt po teto funkci
+        MPI_Finalize();
+	return 0;
         
         if (myRank== 0) // master
         {
@@ -89,7 +97,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void doSearch(EdgeCombination c, EdgeCombination max)
+void doSearch(EdgeCombination * c, EdgeCombination * max)
 {
     // iterator from c to max
     CombinationIterator * it = new CombinationIterator(c, max);	
