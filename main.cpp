@@ -1,72 +1,45 @@
 #include <iostream>
+#include <fstream>
+#include <mpi/mpi.h>
 #include "Graph.h"
 #include "GraphFactory.h"
-#include "Solution.h"
-#include "EdgeCombination.h"
-#include "CombinationIterator.h"
+#include "Process.h"
 
 using namespace std;
 
 // main
 int main(int argc, char *argv[])
 {
+	int currentProcess; // cislo procesu
+	int processCount; // pocet procesu
+	// Inicializace MPI knihovny: http://www.mcs.anl.gov/research/projects/mpi/www/www3/MPI_Init.html
+	MPI_Init(&argc, &argv);
+	// Zjisti cislo procesu. 0 je hlavni proces, ostatni maji cisla ruzna od nuly
+	MPI_Comm_rank(MPI_COMM_WORLD, &currentProcess);
+	// Ulozi do p pocet dostupnych procesu
+	MPI_Comm_size(MPI_COMM_WORLD, &processCount);
+	
+	cout << "Running process " << currentProcess << " of " << processCount << "." << endl;
+
+	// create graph (pokud se zada v prvnim parametru nazev souboru, mel by se nacist ten)
 	GraphFactory factory;
 	
-	// create graph
-	Graph * g = factory.createFromStream(std::cin);
-
-	int edgeCount = g->getEdgeCount();
-	cout << "nodes: " << g->getNodesCount() << ", edges: " <<  edgeCount << endl;
+	Graph * graph = 0;
 	
-	// best price
-	int myBestPrice = -1;
-	
-	// best solution
-	Solution * myBestSolution = 0;
-	
-	// nejlepsi dosazitelne reseni je 0 pro sudy pocet hran a 1 pro lichy
-	int bestSolutionPossible = edgeCount % 2;
-	
-	// napr.: {RED, RED, RED}
-	EdgeCombination * c = new EdgeCombination(edgeCount);
-	
-	// napr.: {YELLOW, YELLOW, YELLOW}
-	EdgeCombination * max = EdgeCombination::createMaxCombination(edgeCount);
-	
-	// iterator from c to max
-	CombinationIterator * it = new CombinationIterator(c, max);	
-	do {
-		// create solution: graph is shared instance, combination instance is cloned
-		Solution * s = new Solution(g, it->getCurrent()->clone());
-	
-		// triangle test and price test
-		if (g->testTriangleOk(it->getCurrent()) && (myBestPrice == -1 || myBestPrice > s->getPrice())) {
-			// update data
-			myBestPrice = s->getPrice();
-			delete myBestSolution;
-			myBestSolution = s;
-			
-			// if price is best possible then quit algorithm
-			if (myBestPrice == bestSolutionPossible) {
-				break;
-			}
-		} else {
-			// delete current solution instance
-			delete s;
-		}
-		
-		// prepni na dalsi
-		it->next();
-	} while (it->hasNext());
-	
-	// print solution
-	if (myBestPrice != -1) {
-		myBestSolution->print();
-		delete myBestSolution;
+	if (argc > 0) {
+		ifstream fstream(argv[0]);
+		graph = factory.createFromStream(fstream);
+	} else {
+		graph = factory.createFromStream(cin);
 	}
 	
-	delete it;
-	delete g;
+	Process * process = new Process(graph, currentProcess == 0, processCount);
+	process->run();
+	
+	delete process;
+	delete graph;
+	
+	MPI_Finalize();
 	
 	return 0;
 }
