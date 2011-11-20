@@ -3,6 +3,7 @@
 #include "CombinationIterator.h"
 #include "Graph.h"
 #include "Solution.h"
+#include "mpi.h"
 
 using namespace std;
 
@@ -53,24 +54,32 @@ using namespace std;
 class Process
 {
 public:
-	Process(Graph * graph, bool isRoot, int processCount);
+	Process(Graph * graph, int currentProcess, int processCount);
 	
 	void run();
 	void checkMessages();
-	void checkSolution(EdgeCombination * c);
+	void checkSolution(CombinationIterator * it);
 	void sendMessages() const;
-	
+        void constructMoreWorkMessage();
+        void updateMessageWithBestSolution();
 	// kolik cyklu ma probehnout pred kontrolou zprav
 	static const int TIMEOUT = 100;
 	static const int MASTER_TIMEOUT = 50;
 
 private:
 	int processCount;
-	bool isMaster;
+        int currentProcess;
+	bool isMaster;        
 	bool stopped;
 	Graph * graph;
 	Solution * myBestSolution;
 	CombinationIterator * iter;
 	int bestSolutionPossible;
 	int myBestPrice;	
+        int processWorkUnit; // jednotka prace procesu v poctu hranach grafu.
+        int processedWorkUnitCounter; // pocet jiz zpracovanych jednotek prace        
+        // status posilanych priznaku. Po prijeti zpravy,
+        //napr. MPI_Recv, se do statusu nastavi typ zpravy (TAG, v nasem pripade definovane konstanty)
+        MPI_Status status; 
+        int solutionInIntMessageLenght;
 };

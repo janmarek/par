@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 		graph = factory.createFromStream(cin);
 	}
 	
-	Process * process = new Process(graph, currentProcess == 0, processCount);
+	Process * process = new Process(graph, currentProcess, processCount);
 	process->run();
 	
 	delete process;
