@@ -427,6 +427,88 @@ void testIterator()
 	cout << endl;
 }
 
+void testIteratorDivide()
+{
+	cout << "Test iterator divide" << endl;
+
+	EdgeCombination * zero = new EdgeCombination(4);
+	EdgeCombination * one = new EdgeCombination(4);
+	one->setColor(0, YELLOW);
+	EdgeCombination * two = new EdgeCombination(4);
+	two->setColor(1, YELLOW);
+	EdgeCombination * three = new EdgeCombination(4);
+	three->setColor(0, YELLOW);
+	three->setColor(1, YELLOW);
+	EdgeCombination * four = new EdgeCombination(4);
+	four->setColor(2, YELLOW);
+	EdgeCombination * five = new EdgeCombination(4);
+	five->setColor(0, YELLOW);
+	five->setColor(2, YELLOW);
+	EdgeCombination * six = new EdgeCombination(4);
+	six->setColor(1, YELLOW);
+	six->setColor(2, YELLOW);
+	EdgeCombination * seven = new EdgeCombination(4);
+	seven->setColor(0, YELLOW);
+	seven->setColor(1, YELLOW);
+	seven->setColor(2, YELLOW);
+	EdgeCombination * eight = new EdgeCombination(4);
+	eight->setColor(3, YELLOW);
+	EdgeCombination * fifteen = new EdgeCombination(4);
+	fifteen->setColor(0, YELLOW);
+	fifteen->setColor(1, YELLOW);
+	fifteen->setColor(2, YELLOW);
+	fifteen->setColor(3, YELLOW);
+	
+	CombinationIterator * tmp = new CombinationIterator(zero->clone(), seven->clone());
+	
+	vector<CombinationIterator *> intervals = tmp->divide(3);
+	assert(intervals.size() == 3);
+	assert(intervals[0]->getCurrent()->equals(zero));
+	assert(intervals[0]->getMax()->equals(one));
+	assert(intervals[1]->getCurrent()->equals(two));
+	assert(intervals[1]->getMax()->equals(three));
+	assert(intervals[2]->getCurrent()->equals(four));
+	assert(intervals[2]->getMax()->equals(seven));
+
+	vector<CombinationIterator *> intervals2 = tmp->divide(2);
+	assert(intervals2.size() == 2);
+	assert(intervals2[0]->getCurrent()->equals(zero));
+	assert(intervals2[0]->getMax()->equals(three));
+	assert(intervals2[1]->getCurrent()->equals(four));
+	assert(intervals2[1]->getMax()->equals(seven));
+
+	vector<CombinationIterator *> intervals3 = tmp->divide(1);
+	assert(intervals3.size() == 1);
+	assert(intervals3[0]->getCurrent()->equals(zero));
+	assert(intervals3[0]->getMax()->equals(seven));
+	
+	CombinationIterator * tmp2 = new CombinationIterator(zero->clone(), fifteen->clone());
+	
+	vector<CombinationIterator *> intervals4 = tmp2->divide(3);
+	assert(intervals4.size() == 3);
+	assert(intervals4[0]->getCurrent()->equals(zero));
+	assert(intervals4[0]->getMax()->equals(three));
+	assert(intervals4[1]->getCurrent()->equals(four));
+	assert(intervals4[1]->getMax()->equals(seven));
+	assert(intervals4[2]->getCurrent()->equals(eight));
+	assert(intervals4[2]->getMax()->equals(fifteen));
+
+	delete tmp;
+	delete tmp2;
+	delete zero;
+	delete one;
+	delete two;
+	delete three;
+	delete four;
+	delete five;
+	delete six;
+	delete seven;
+	delete eight;
+	delete fifteen;
+
+	cout << endl;
+}
+
 int main (int argc, char const* argv[])
 {
 	cout << "Graph tests" << endl << endl;
@@ -450,6 +532,7 @@ int main (int argc, char const* argv[])
 	
 	cout << endl << "Iterator tests" << endl << endl;
 	testIterator();
+	testIteratorDivide();
 	
 	return 0;
 }
