@@ -23,7 +23,19 @@ EdgeCombination * CombinationIterator::next()
 
 bool CombinationIterator::hasNext() const
 {
-	return !current->equals(end);
+	return current->isLower(end);
+}
+
+CombinationIterator * CombinationIterator::divide()
+{
+	EdgeCombination * newEnd = end->clone()->subtract(current)->divideBy2()->add(current);
+	EdgeCombination * newStart = newEnd->clone();
+	newStart->increment();
+
+	CombinationIterator * newIt = new CombinationIterator(newStart, end);
+	this->end = newEnd;
+
+	return newIt;
 }
 
 CombinationIterator::~CombinationIterator()

@@ -10,6 +10,7 @@ public:
 	EdgeCombination * getCurrent() const;
 	EdgeCombination * next();
 	bool hasNext() const;
+	CombinationIterator * divide();
 	
 private:
 	EdgeCombination * current;

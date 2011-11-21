@@ -22,6 +22,14 @@ public:
 	
 	void increment();
 	
+	EdgeCombination * add(const EdgeCombination * c);
+
+	EdgeCombination * subtract(const EdgeCombination * c);
+	
+	EdgeCombination * divideBy2();
+
+	bool isLower(const EdgeCombination * c) const;
+	
 	bool equals(const EdgeCombination * c) const;
 	
 	Color getColor(int edge) const;
@@ -35,6 +43,8 @@ public:
 	int getYellowCount() const;
 	
 	int getRedCount() const;
+	
+	void print() const;
 
 private:
 	// combination

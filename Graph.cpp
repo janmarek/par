@@ -7,7 +7,7 @@ using namespace std;
 Graph::Graph(int size)
 {
 	this->size = size;
-
+	this->edgeCount = 0;
 	vector<bool> row(size, false);
 	vector< vector<bool> > map(size, row);
 	this->map = map;
@@ -15,18 +15,19 @@ Graph::Graph(int size)
 
 void Graph::addEdge(int node1, int node2)
 {
+	if (hasEdge(node1, node2)) {
+		return;
+	}
+
 	map[node1][node2] = true;
 	map[node2][node1] = true;
-        // pripocita se nova hrana jen pokud je cerstva
-        if (node1 < node2 )
-        {
-            // souradnice hrany pro snazsi vypocet trojuhelnikovosti;
-            this->edgeCount++;
-            vector<int> edge(2, 0);
-            edge[0] = node1;
-            edge[1] = node2;        
-            this->edges.push_back(edge);
-        }
+
+	// souradnice hrany pro snazsi vypocet trojuhelnikovosti;
+	this->edgeCount++;
+	vector<int> edge(2, 0);
+	edge[0] = node1;
+	edge[1] = node2;        
+	this->edges.push_back(edge);
 }
 
 bool Graph::hasEdge(int node1, int node2) const
@@ -34,28 +35,9 @@ bool Graph::hasEdge(int node1, int node2) const
 	return map[node1][node2];
 }
 
-void Graph::removeEdge(int node1, int node2)
-{
-	map[node1][node2] = false;
-	map[node2][node1] = false;
-}
-
 int Graph::getEdgeCount()
 {
     return this->edgeCount;
-    /*
-	int count = 0;
-
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < size; j++) {
-			if (map[i][j]) {
-				count++;
-			}
-		}
-	}
-
-	return count / 2;
-     */
 }
 
 int Graph::getNodesCount()
@@ -70,10 +52,8 @@ vector<int> Graph::getNeighbours(int node) const
 {
 	vector<int> vc;
 	
-	for (int i = 0; i < size; i++)
-	{
-		if (map[node][i] > 0)
-		{
+	for (int i = 0; i < size; i++) {
+		if (map[node][i] > 0) {
 			vc.push_back(i);
 		}
 	}
@@ -95,8 +75,7 @@ bool Graph::testTriangleOk(EdgeCombination * c) const
     {
         int node1 = edges[i][0];
         int node2 = edges[i][1];
-        if (!this->testEdge(node1, node2, c, c->getColor(i), i))      
-        {
+        if (!this->testEdge(node1, node2, c, c->getColor(i), i)) {
             return false;
         }
     }

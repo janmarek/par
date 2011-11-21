@@ -32,7 +32,8 @@ public:
 	bool testTriangle(int node1, int node2, int node3) const;
 	
 	bool testTriangleOk(EdgeCombination *) const;
-        bool testEdge(int, int, EdgeCombination *, Color, unsigned int) const;
+	
+	bool testEdge(int, int, EdgeCombination *, Color, unsigned int) const;
 
 private:        
 	// matice sousednosti (0 - neni hrana, 1 - cerstva hrana, 2 - necerstva hrana)
@@ -40,7 +41,7 @@ private:
 	
 	// pocet uzlu grafu
 	int size;
-        unsigned int edgeCount;
-        vector < vector<int> > edges;
+	unsigned int edgeCount;
+	vector < vector<int> > edges;
         
 };

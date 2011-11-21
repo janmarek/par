@@ -33,24 +33,6 @@ void testAddAndHasEdge()
 	cout << endl;
 }
 
-void testRemoveEdge()
-{
-	cout << "Test remove edge" << endl;
-
-	Graph * g = new Graph(6);
-
-	g->addEdge(0, 2);
-
-	assertTrue(g->hasEdge(0, 2));
-
-	g->removeEdge(0, 2);
-	assertFalse(g->hasEdge(0, 2));
-
-	delete g;
-	
-	cout << endl;
-}
-
 void testEdgeCount()
 {
 	cout << "Test edge count" << endl;
@@ -71,10 +53,6 @@ void testEdgeCount()
 	g->addEdge(2, 1);
 	
 	assert(g->getEdgeCount() == 3);
-	
-	g->removeEdge(2, 0);
-	
-	assert(g->getEdgeCount() == 2);
 	
 	cout << endl;
 }
@@ -212,6 +190,151 @@ void testCombinationIncrement()
 	cout << endl;
 }
 
+void testCombinationAdd()
+{
+	cout << "Test combination add" << endl;
+	
+	EdgeCombination * zero = new EdgeCombination(3);
+	EdgeCombination * one = new EdgeCombination(3);
+	one->setColor(0, YELLOW);
+	EdgeCombination * two = new EdgeCombination(3);
+	two->setColor(1, YELLOW);
+	EdgeCombination * three = new EdgeCombination(3);
+	three->setColor(0, YELLOW);
+	three->setColor(1, YELLOW);
+	EdgeCombination * four = new EdgeCombination(3);
+	four->setColor(2, YELLOW);
+	EdgeCombination * five = new EdgeCombination(3);
+	five->setColor(0, YELLOW);
+	five->setColor(2, YELLOW);
+	EdgeCombination * six = new EdgeCombination(3);
+	six->setColor(1, YELLOW);
+	six->setColor(2, YELLOW);
+	EdgeCombination * seven = new EdgeCombination(3);
+	seven->setColor(0, YELLOW);
+	seven->setColor(1, YELLOW);
+	seven->setColor(2, YELLOW);
+	
+	EdgeCombination * test = new EdgeCombination(3);
+	assert(test->add(zero)->equals(zero));
+	assert(test->add(one)->equals(one));
+	assert(test->add(one)->equals(two));
+	assert(test->add(three)->equals(five));
+	assert(test->add(two)->equals(seven));
+	
+	EdgeCombination * test2 = three->clone();
+	assert(test2->add(three)->equals(six));
+	assert(test2->add(one)->equals(seven));
+	
+	delete zero;
+	delete one;
+	delete two;
+	delete three;
+	delete four;
+	delete five;
+	delete six;
+	delete seven;
+	delete test2;
+	delete test;
+	
+	cout << endl;
+}
+
+void testCombinationDivideBy2()
+{
+	cout << "Test combination divide by 2" << endl;
+	
+	EdgeCombination * zero = new EdgeCombination(3);
+	EdgeCombination * one = new EdgeCombination(3);
+	one->setColor(0, YELLOW);
+	EdgeCombination * two = new EdgeCombination(3);
+	two->setColor(1, YELLOW);
+	EdgeCombination * three = new EdgeCombination(3);
+	three->setColor(0, YELLOW);
+	three->setColor(1, YELLOW);
+	EdgeCombination * four = new EdgeCombination(3);
+	four->setColor(2, YELLOW);
+	EdgeCombination * five = new EdgeCombination(3);
+	five->setColor(0, YELLOW);
+	five->setColor(2, YELLOW);
+	EdgeCombination * six = new EdgeCombination(3);
+	six->setColor(1, YELLOW);
+	six->setColor(2, YELLOW);
+	EdgeCombination * seven = new EdgeCombination(3);
+	seven->setColor(0, YELLOW);
+	seven->setColor(1, YELLOW);
+	seven->setColor(2, YELLOW);
+	
+	assert(six->divideBy2()->equals(three));
+	assert(seven->divideBy2()->equals(three));
+	assert(one->divideBy2()->equals(zero));
+	assert(five->divideBy2()->equals(two));
+	
+	delete zero;
+	delete one;
+	delete two;
+	delete three;
+	delete four;
+	delete five;
+	delete six;
+	delete seven;
+	
+	cout << endl;
+}
+
+void testCombinationSubtract()
+{
+	cout << "Test combination subtract" << endl;
+	
+	EdgeCombination * zero = new EdgeCombination(3);
+	EdgeCombination * one = new EdgeCombination(3);
+	one->setColor(0, YELLOW);
+	EdgeCombination * two = new EdgeCombination(3);
+	two->setColor(1, YELLOW);
+	EdgeCombination * three = new EdgeCombination(3);
+	three->setColor(0, YELLOW);
+	three->setColor(1, YELLOW);
+	EdgeCombination * four = new EdgeCombination(3);
+	four->setColor(2, YELLOW);
+	EdgeCombination * five = new EdgeCombination(3);
+	five->setColor(0, YELLOW);
+	five->setColor(2, YELLOW);
+	EdgeCombination * six = new EdgeCombination(3);
+	six->setColor(1, YELLOW);
+	six->setColor(2, YELLOW);
+	EdgeCombination * seven = new EdgeCombination(3);
+	seven->setColor(0, YELLOW);
+	seven->setColor(1, YELLOW);
+	seven->setColor(2, YELLOW);
+	
+	EdgeCombination * test = seven->clone();
+	assert(test->subtract(zero)->equals(seven));
+	assert(test->subtract(one)->equals(six));
+	assert(test->subtract(one)->equals(five));
+	assert(test->subtract(three)->equals(two));
+	assert(test->subtract(two)->equals(zero));
+	
+	EdgeCombination * test2 = four->clone();
+	assert(test2->subtract(three)->equals(one));
+	
+	EdgeCombination * test3 = two->clone();
+	assert(two->subtract(one)->equals(one));
+	
+	delete zero;
+	delete one;
+	delete two;
+	delete three;
+	delete four;
+	delete five;
+	delete six;
+	delete seven;
+	delete test2;
+	delete test;
+	delete test3;
+	
+	cout << endl;
+}
+
 void testCombinationOperators()
 {
 	cout << "Test combination operators" << endl;
@@ -308,7 +431,6 @@ int main (int argc, char const* argv[])
 {
 	cout << "Graph tests" << endl << endl;
 	testAddAndHasEdge();
-	testRemoveEdge();
 	testEdgeCount();
 	testTestTriangle();
 	testGetNeighbours();
@@ -319,6 +441,9 @@ int main (int argc, char const* argv[])
 	cout << endl << "Combination tests" << endl << endl;
 	testCombination();
 	testCombinationIncrement();
+	testCombinationAdd();
+	testCombinationSubtract();
+	testCombinationDivideBy2();
 	testCombinationOperators();
 	testCombinationCounts();
 	testCombinationClone();
