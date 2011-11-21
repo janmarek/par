@@ -53,7 +53,11 @@ void Process::run()
 			checkSolution(iter->getCurrent()->clone());
 	
 			// prepni na dalsi
-			iter->next();
+			if (iter->hasNext()) {
+				iter->next();
+			} else {
+				stopped = true;
+			}
 			
 			counter++;
 			
@@ -103,7 +107,7 @@ void Process::checkSolution(EdgeCombination * c)
 
 void Process::checkMessages()
 {
-
+	cout << "[P" << processNum << "] checking messages" << endl;
 	// TODO
 	// zkontroluj NEWBEST a pripadne se ukonci (v pripade nalezeni reseni s cenou bestPricePossible)
 	// pokud jsi slave, zkontroluj SENDJOB
@@ -112,6 +116,7 @@ void Process::checkMessages()
 
 void Process::sendMessages() const
 {
+	cout << "[P" << processNum << "] sending messages" << endl;
 	// TODO
 	// zkontroluj, jestli nemuzes poslat NEWBEST (pokud je bestPricePossible, tak uz nic dalsiho neposilej)
 	// pokud jsi slave, posli END nebo STATE (podle toho, jestli mas praci)
@@ -121,6 +126,7 @@ void Process::sendMessages() const
 
 void Process::receiveJobMessage()
 {
+	cout << "[P" << processNum << "] receiving job message" << endl;
 	MPI_Status * status = 0;
 	int combSize = graph->getEdgeCount();
 	int msgSize = combSize * 2;
