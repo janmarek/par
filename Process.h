@@ -53,19 +53,29 @@ using namespace std;
 class Process
 {
 public:
-	Process(Graph * graph, bool isRoot, int processCount);
+	Process(Graph * graph, int processNum, int processCount);
 	
 	void run();
 	void checkMessages();
 	void checkSolution(EdgeCombination * c);
 	void sendMessages() const;
+	void sendJobMessage(int, CombinationIterator *) const;
+	void receiveJobMessage();
 	
 	// kolik cyklu ma probehnout pred kontrolou zprav
 	static const int TIMEOUT = 100;
 	static const int MASTER_TIMEOUT = 50;
 
+	static const int CMD_JOB = 1;
+	static const int CMD_NEWBEST = 2;
+	static const int CMD_STATE = 3;
+	static const int CMD_END = 4;
+	static const int CMD_SENDJOB = 5;
+	static const int CMD_STOP = 6;
+
 private:
 	int processCount;
+	int processNum;
 	bool isMaster;
 	bool stopped;
 	Graph * graph;

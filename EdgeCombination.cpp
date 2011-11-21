@@ -118,12 +118,10 @@ EdgeCombination * EdgeCombination::subtract(const EdgeCombination * combination)
 
 void EdgeCombination::print() const
 {
-	std::cout << std::endl << size << " ";
 	for (int i = size - 1; i >= 0; i--)
 	{
 		std::cout << (isRed(i) ? "R" : "Y");
 	}
-	std::cout << std::endl;
 }
 
 bool EdgeCombination::equals(const EdgeCombination * c) const

@@ -18,8 +18,13 @@ int main(int argc, char *argv[])
 	MPI_Comm_rank(MPI_COMM_WORLD, &currentProcess);
 	// Ulozi do p pocet dostupnych procesu
 	MPI_Comm_size(MPI_COMM_WORLD, &processCount);
+
+	MPI_Barrier(MPI_COMM_WORLD);
 	
 	cout << "Running process " << currentProcess << " of " << processCount << "." << endl;
+
+	MPI_Finalize();
+	return 0;
 
 	// create graph (pokud se zada v prvnim parametru nazev souboru, mel by se nacist ten)
 	GraphFactory factory;
@@ -33,7 +38,7 @@ int main(int argc, char *argv[])
 		graph = factory.createFromStream(cin);
 	}
 	
-	Process * process = new Process(graph, currentProcess == 0, processCount);
+	Process * process = new Process(graph, currentProcess, processCount);
 	process->run();
 	
 	delete process;
