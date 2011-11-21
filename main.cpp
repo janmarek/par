@@ -23,16 +23,14 @@ int main(int argc, char *argv[])
 	
 	cout << "Running process " << currentProcess << " of " << processCount << "." << endl;
 
-	MPI_Finalize();
-	return 0;
-
 	// create graph (pokud se zada v prvnim parametru nazev souboru, mel by se nacist ten)
 	GraphFactory factory;
 	
 	Graph * graph = 0;
 	
-	if (argc > 0) {
-		ifstream fstream(argv[0]);
+	if (argc > 1) {
+		ifstream fstream(argv[1]);
+		cout << "loading graph file " << argv[1] << endl;
 		graph = factory.createFromStream(fstream);
 	} else {
 		graph = factory.createFromStream(cin);

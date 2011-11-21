@@ -25,9 +25,10 @@ void Process::run()
 	int counter = 0;
 	
 	if (isMaster) {
-		cout << "[P0] initializing master" << endl;
-
 		int ec = graph->getEdgeCount();
+
+		cout << "[P0] initializing master (edge count " << ec << ")" << endl;
+
 		CombinationIterator * tmp = new CombinationIterator(new EdgeCombination(ec), EdgeCombination::createMaxCombination(ec));
 		vector<CombinationIterator *> intervals = tmp->divide(processCount);
 		delete tmp;
