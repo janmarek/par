@@ -86,7 +86,7 @@ private:
 	Graph * graph;
 	Solution * myBestSolution;
 	CombinationIterator * iter;
-	int bestSolutionPossible;
+	int bestPricePossible;
 	int myBestPrice;
 	vector<ProcessState> processes;
 	ProcessState state;

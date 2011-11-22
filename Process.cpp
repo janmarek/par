@@ -17,7 +17,7 @@ Process::Process(Graph * graph, int processNum, int processCount)
 	iter = 0;
 	stopped = false;
 	combinationSize = graph->getEdgeCount();
-	bestSolutionPossible = combinationSize % 2;
+	bestPricePossible = combinationSize % 2;
 	myBestPrice = -1;
 	state = STATE_NEW;
 	sendBest = false;
@@ -69,7 +69,7 @@ void Process::run()
 			counter++;
 			
 			// message check and send
-			if ((isMaster && counter == MASTER_TIMEOUT) || counter == TIMEOUT || !iter->hasNext()) {
+			if ((isMaster && counter == MASTER_TIMEOUT) || counter == TIMEOUT || !iter->hasNext() || myBestPrice == bestPricePossible) {
 				counter = 0;
 				checkMessages();
 				sendMessages();
@@ -130,6 +130,14 @@ void Process::checkMessages()
 		sendBest = false;
 	}
 
+	if (status.MPI_TAG == CMD_STOP) {
+		char * buf = new char[0];
+		MPI_Recv(buf, 0, MPI_CHAR, MPI_ANY_SOURCE, CMD_STOP, MPI_COMM_WORLD, &status);
+		cout << "[P" << processNum << "] received STOP" << endl;
+		stopped = true;
+		delete [] buf;
+	}
+
 	if (isMaster) {
 		if (status.MPI_TAG == CMD_END) {
 			char * buf = new char[0];
@@ -141,14 +149,6 @@ void Process::checkMessages()
 	} else {
 		if (status.MPI_TAG == CMD_JOB) {
 			receiveJobMessage();
-		}
-
-		if (status.MPI_TAG == CMD_STOP) {
-			char * buf = new char[0];
-			MPI_Recv(buf, 0, MPI_CHAR, MPI_ANY_SOURCE, CMD_STOP, MPI_COMM_WORLD, &status);
-			cout << "[P" << processNum << "] received STOP" << endl;
-			stopped = true;
-			delete [] buf;
 		}
 	}
 
@@ -163,7 +163,6 @@ void Process::checkMessages()
 void Process::sendMessages()
 {
 	//cout << "[P" << processNum << "] sending messages" << endl;
-
 	
 	if (sendBest) {
 		char * msg = serializeCombination(myBestSolution->getCombination());
@@ -177,6 +176,22 @@ void Process::sendMessages()
 			}
 		}
 		delete [] msg;
+
+		if (myBestPrice == bestPricePossible) {
+			char * msg = new char[0];
+
+			for (int i = 0; i < processCount; ++i) {
+				if (i != processNum) {
+					cout << "[P" << processNum << "] sending STOP to " << i << endl;
+					MPI_Send(msg, 0, MPI_CHAR, i, CMD_STOP, MPI_COMM_WORLD);
+				}				
+			}
+			delete [] msg;
+
+			cout << "[P" << processNum << "] stopping" << endl;
+			stopped = true;
+			return;
+		}
 
 		sendBest = false;
 	}
