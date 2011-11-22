@@ -18,6 +18,7 @@ Process::Process(Graph * graph, int processNum, int processCount)
 	stopped = false;
 	bestSolutionPossible = graph->getEdgeCount() % 2;
 	myBestPrice = -1;
+	state = STATE_NEW;
 }
 
 void Process::run()
@@ -35,11 +36,16 @@ void Process::run()
 
 		this->iter = intervals[0];
 
+		vector<ProcessState> prVc(processCount, STATE_NEW);
+		prVc[0] = STATE_WORKING;
+		this->processes = prVc;
+
 		for (unsigned int i = 1; i < intervals.size(); ++i) {
 			sendJobMessage(i, intervals[i]);
 		}
 
 		cout << "[P0] initial jobs sent" << endl;
+		state = STATE_WORKING;
 	}
 	
 	while (true) {
@@ -55,14 +61,12 @@ void Process::run()
 			// prepni na dalsi
 			if (iter->hasNext()) {
 				iter->next();
-			} else {
-				stopped = true;
 			}
 			
 			counter++;
 			
 			// message check and send
-			if ((isMaster && counter == MASTER_TIMEOUT) || counter == TIMEOUT) {
+			if ((isMaster && counter == MASTER_TIMEOUT) || counter == TIMEOUT || !iter->hasNext()) {
 				counter = 0;
 				checkMessages();
 				sendMessages();
@@ -107,16 +111,87 @@ void Process::checkSolution(EdgeCombination * c)
 
 void Process::checkMessages()
 {
-	cout << "[P" << processNum << "] checking messages" << endl;
+	//cout << "[P" << processNum << "] processing messages" << endl;
+
+	MPI_Status status;
+	int flag = 0;
+
+	MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &status);
+
+	if (isMaster) {
+		if (status.MPI_TAG == CMD_END) {
+			char * buf = new char[graph->getEdgeCount()];
+			MPI_Recv(buf, graph->getEdgeCount(), MPI_CHAR, MPI_ANY_SOURCE, CMD_END, MPI_COMM_WORLD, &status);
+			processes[status.MPI_SOURCE] = STATE_NOT_WORKING;
+			cout << "[P" << processNum << "] received END from " << status.MPI_SOURCE << endl;
+			delete [] buf;
+		}
+	} else {
+		if (status.MPI_TAG == CMD_JOB) {
+			receiveJobMessage();
+		}
+
+		if (status.MPI_TAG == CMD_STOP) {
+			char * buf = new char[0];
+			MPI_Recv(buf, 0, MPI_CHAR, MPI_ANY_SOURCE, CMD_STOP, MPI_COMM_WORLD, &status);
+			cout << "[P" << processNum << "] received STOP" << endl;
+			stopped = true;
+			delete [] buf;
+		}
+	}
+
+	// MPI_Iprobe ( int source, int tag, MPI_Comm comm, int *flag, MPI_Status *status ) 
+	
 	// TODO
 	// zkontroluj NEWBEST a pripadne se ukonci (v pripade nalezeni reseni s cenou bestPricePossible)
 	// pokud jsi slave, zkontroluj SENDJOB
 	// pokud jsi slave, cekej na JOB nebo na STOP (blokujici receive)
 }
 
-void Process::sendMessages() const
+void Process::sendMessages()
 {
-	cout << "[P" << processNum << "] sending messages" << endl;
+	//cout << "[P" << processNum << "] sending messages" << endl;
+
+	if (isMaster) {
+		bool allFinished = true;
+
+		for (int i = 1; i < processCount; ++i) { // do not check master
+			if (processes[i] == STATE_NOT_WORKING) {
+				cout << "[P" << processNum << "] sending STOP to " << i << endl;
+				char * msg = new char[0];
+				MPI_Send(msg, 0, MPI_CHAR, i, CMD_STOP, MPI_COMM_WORLD);
+				delete [] msg;
+				processes[i] = STATE_FINISHED;
+			}
+
+			if (processes[i] != STATE_FINISHED) {
+				allFinished = false;
+			}
+		}
+
+		if (allFinished && !iter->hasNext()) {
+			stopped = true;
+			cout << "[P" << processNum << "] stopping" << endl;
+		}
+	}
+
+	if (!isMaster) {
+		// send END
+		if (state == STATE_WORKING && !iter->hasNext()) {
+			cout << "[P" << processNum << "] sending END" << endl;
+
+			// TODO solution can be null
+			EdgeCombination * comb = myBestSolution->getCombination();
+			char * msg = serializeCombination(comb);
+			MPI_Send(msg, comb->getSize(), MPI_CHAR, 0, CMD_END, MPI_COMM_WORLD);
+			state = STATE_NOT_WORKING;
+
+		// send STATE
+		} else {
+			
+		}
+	}
+
 	// TODO
 	// zkontroluj, jestli nemuzes poslat NEWBEST (pokud je bestPricePossible, tak uz nic dalsiho neposilej)
 	// pokud jsi slave, posli END nebo STATE (podle toho, jestli mas praci)
@@ -134,34 +209,60 @@ void Process::receiveJobMessage()
 
 	MPI_Recv(msg, msgSize, MPI_CHAR, 0, Process::CMD_JOB, MPI_COMM_WORLD, status);
 
-	if (iter != 0) {
-		delete iter;
-	}
-
-	EdgeCombination * start = new EdgeCombination(combSize);
-
-	for (int i = 0; i < combSize; ++i) {
-		start->setColor(i, msg[i] == 'r' ? RED : YELLOW);
-	}
-
-	EdgeCombination * end = new EdgeCombination(combSize);
-
-	for (int i = 0; i < combSize; ++i) {
-		end->setColor(i, msg[combSize + i] == 'r' ? RED : YELLOW);
-	}
-
-	this->iter = new CombinationIterator(start, end);
+	this->iter = deserializeIterator(msg);
 
 	cout << "[P" << processNum << "] receive job from ";
-	start->print();
+	iter->getCurrent()->print();
 	cout << " to ";
-	end->print();
+	iter->getMax()->print();
 	cout << endl;
 
 	delete [] msg;
+
+	state = STATE_WORKING;
 }
 
-void Process::sendJobMessage(int processNum, CombinationIterator * interval) const
+void Process::sendJobMessage(int proc, CombinationIterator * interval) const
+{
+	cout << "[P" << processNum << "] sending job from ";
+	interval->getCurrent()->print();
+	cout << " to ";
+	interval->getMax()->print();
+	cout << endl;
+
+	char * msg = serializeIterator(interval);
+	MPI_Send(msg, interval->getCurrent()->getSize() * 2, MPI_CHAR, proc, CMD_JOB, MPI_COMM_WORLD);
+	delete [] msg;
+}
+
+//////////////////////////////////////////////////////////////////
+// SERIALIZATION
+//////////////////////////////////////////////////////////////////
+
+char * Process::serializeCombination(EdgeCombination * c) const
+{
+	int combSize = c->getSize();
+	char * msg = new char[combSize];
+
+	for (int i = 0; i < combSize; i++) {
+		msg[i] = c->isRed(i) ? 'r' : 'y';
+	}
+
+	return msg;
+}
+
+EdgeCombination * Process::deserializeCombination(char * buf) const
+{
+	EdgeCombination * c = new EdgeCombination(graph->getEdgeCount());
+
+	for (int i = 0; i < graph->getEdgeCount(); ++i) {
+		c->setColor(i, buf[i] == 'r' ? RED : YELLOW);
+	}
+
+	return c;
+}
+
+char * Process::serializeIterator(CombinationIterator * interval) const
 {
 	EdgeCombination * start = interval->getCurrent();
 	EdgeCombination * end = interval->getMax();
@@ -178,7 +279,13 @@ void Process::sendJobMessage(int processNum, CombinationIterator * interval) con
 		msg[combSize + i] = end->isRed(i) ? 'r' : 'y';
 	}
 
-	MPI_Send(msg, msgSize, MPI_CHAR, processNum, Process::CMD_JOB, MPI_COMM_WORLD);
+	return msg;
+}
 
-	delete [] msg;
+CombinationIterator * Process::deserializeIterator(char * buf) const
+{
+	return new CombinationIterator(
+		deserializeCombination(buf),
+		deserializeCombination(&buf[graph->getEdgeCount()])
+	);
 }

@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
 	MPI_Barrier(MPI_COMM_WORLD);
 	
-	cout << "Running process " << currentProcess << " of " << processCount << "." << endl;
+	cout << "[P" << currentProcess << "] Running process " << currentProcess << " of " << processCount << "." << endl;
 
 	// create graph (pokud se zada v prvnim parametru nazev souboru, mel by se nacist ten)
 	GraphFactory factory;
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	
 	if (argc > 1) {
 		ifstream fstream(argv[1]);
-		cout << "loading graph file " << argv[1] << endl;
+		cout << "[P" << currentProcess << "] loading graph file " << argv[1] << endl;
 		graph = factory.createFromStream(fstream);
 	} else {
 		graph = factory.createFromStream(cin);

@@ -1,0 +1,3 @@
+#pragma once
+
+enum ProcessState { STATE_NEW, STATE_WORKING, STATE_NOT_WORKING, STATE_FINISHED };

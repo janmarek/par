@@ -3,6 +3,7 @@
 #include "CombinationIterator.h"
 #include "Graph.h"
 #include "Solution.h"
+#include "ProcessState.cpp"
 
 using namespace std;
 
@@ -32,20 +33,20 @@ using namespace std;
  *   --------------
  *   Prvni radek je nazev prikazu a zbytek jsou data.
  *
- *   - NEWBEST\n2\nYYRRY
+ *   - NEWBEST YYRRY
  *     - nová nejlepší kombinace je {YELLOW, YELLOW, RED, RED, YELLOW} a ma cenu 2
  *     - broadcast
  *     - pri prijmu zaktualizuju svuj stav
  *     - pokud je newbest nejlepsi mozne reseni, proces se ukonci
- *   - END\n2\nYYRRY
+ *   - END YYRRY
  *     - nemam praci a nejlepsi kombinace je {YELLOW, YELLOW, RED, RED, YELLOW} a ma cenu 2
  *     - poslat masteru, mozna se zmeni s prerozdelovanim
- *   - JOB\nRRR\nYYY
+ *   - JOB RRR YYY
  *     - posilam praci od RRR do YYY
  *     - root posila na zacatku + pri prerozdelovanim
- *   - STATE\nRRR\nYYY
+ *   - STATE RRRYYY
  *     - posila slave masteru, ze jeho aktualni kombinace je RRR a max je YYY, aby mel prehled
- *   - SENDJOB\n4
+ *   - SENDJOB 4
  *     - posila master slaveu, aby poslal slaveu c. 4 nejakou praci
  *   - STOP
  *     - posila master slaveum, aby se zastavily
@@ -58,13 +59,18 @@ public:
 	void run();
 	void checkMessages();
 	void checkSolution(EdgeCombination * c);
-	void sendMessages() const;
+	void sendMessages();
 	void sendJobMessage(int, CombinationIterator *) const;
 	void receiveJobMessage();
-	
+
+	char * serializeIterator(CombinationIterator *) const;
+	CombinationIterator * deserializeIterator(char *) const;
+	char * serializeCombination(EdgeCombination *) const;
+	EdgeCombination * deserializeCombination(char *) const;
+
 	// kolik cyklu ma probehnout pred kontrolou zprav
 	static const int TIMEOUT = 100;
-	static const int MASTER_TIMEOUT = 50;
+	static const int MASTER_TIMEOUT = 10;
 
 	static const int CMD_JOB = 1;
 	static const int CMD_NEWBEST = 2;
@@ -82,5 +88,7 @@ private:
 	Solution * myBestSolution;
 	CombinationIterator * iter;
 	int bestSolutionPossible;
-	int myBestPrice;	
+	int myBestPrice;
+	vector<ProcessState> processes;
+	ProcessState state;
 };
