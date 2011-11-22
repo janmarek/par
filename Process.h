@@ -74,10 +74,9 @@ public:
 
 	static const int CMD_JOB = 1;
 	static const int CMD_NEWBEST = 2;
-	static const int CMD_STATE = 3;
-	static const int CMD_END = 4;
-	static const int CMD_SENDJOB = 5;
-	static const int CMD_STOP = 6;
+	static const int CMD_END = 3;
+	static const int CMD_SENDJOB = 4;
+	static const int CMD_STOP = 5;
 
 private:
 	int processCount;
@@ -91,4 +90,6 @@ private:
 	int myBestPrice;
 	vector<ProcessState> processes;
 	ProcessState state;
+	bool sendBest;
+	int combinationSize;
 };
