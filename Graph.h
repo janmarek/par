@@ -35,6 +35,8 @@ public:
 	
 	bool testEdge(int, int, EdgeCombination *, Color, unsigned int) const;
 
+	vector<int> getEdge(int i);
+
 private:        
 	// matice sousednosti (0 - neni hrana, 1 - cerstva hrana, 2 - necerstva hrana)
 	vector< vector<bool> > map;

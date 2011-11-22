@@ -4,6 +4,8 @@
 #include "Solution.h"
 #include "EdgeCombination.h"
 
+using namespace std;
+
 Solution::Solution(Graph * g, EdgeCombination * c)
 {
 	graph = g;
@@ -32,6 +34,11 @@ int Solution::getPrice() const
 
 void Solution::print() const
 {
-	// TODO
-	std::cout << "Solution has price " << getPrice() << std::endl;
+	cout << endl << endl;
+	cout << "Solution has price " << getPrice() << endl;
+
+	for (int i = 0; i < combination->getSize(); ++i) {
+		cout << "* edge from " << graph->getEdge(i)[0] << " to " << graph->getEdge(i)[1] << " is "
+			<< (combination->isRed(i) ? "red" : "yellow") << endl;
+	}
 }

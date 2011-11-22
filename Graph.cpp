@@ -30,6 +30,11 @@ void Graph::addEdge(int node1, int node2)
 	this->edges.push_back(edge);
 }
 
+vector<int> Graph::getEdge(int i)
+{
+    return this->edges[i];
+}
+
 bool Graph::hasEdge(int node1, int node2) const
 {
 	return map[node1][node2];
