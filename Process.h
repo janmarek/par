@@ -1,4 +1,5 @@
 #pragma once
+#include <mpi/mpi.h>
 #include <vector>
 #include "CombinationIterator.h"
 #include "Graph.h"
@@ -58,10 +59,23 @@ public:
 	
 	void run();
 	void checkMessages();
-	void checkSolution(EdgeCombination * c);
 	void sendMessages();
+
+	bool checkSolution(EdgeCombination * c);
+
 	void sendJobMessage(int, CombinationIterator *) const;
 	void receiveJobMessage();
+	void receiveBest(MPI_Status & status);
+	void divideJobAndSend();
+	void receiveStop(MPI_Status & status);
+	void receiveEnd(MPI_Status & status);
+	void receiveSendJob(MPI_Status & status);
+	void sendSendJob(int from, int to);
+	void sendStop(int);
+	void sendEnd();
+	void sendBestToAll();
+	void stop();
+	void setState(ProcessState s);
 
 	char * serializeIterator(CombinationIterator *) const;
 	CombinationIterator * deserializeIterator(char *) const;
@@ -69,8 +83,8 @@ public:
 	EdgeCombination * deserializeCombination(char *) const;
 
 	// kolik cyklu ma probehnout pred kontrolou zprav
-	static const int TIMEOUT = 100;
-	static const int MASTER_TIMEOUT = 10;
+	static const int TIMEOUT = 10;
+	static const int MASTER_TIMEOUT = 4;
 
 	static const int CMD_JOB = 1;
 	static const int CMD_NEWBEST = 2;
@@ -92,4 +106,5 @@ private:
 	ProcessState state;
 	bool sendBest;
 	int combinationSize;
+	int sendJobTo;
 };

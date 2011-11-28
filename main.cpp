@@ -19,6 +19,8 @@ int main(int argc, char *argv[])
 	// Ulozi do p pocet dostupnych procesu
 	MPI_Comm_size(MPI_COMM_WORLD, &processCount);
 
+	double startSeconds = MPI_Wtime();
+
 	MPI_Barrier(MPI_COMM_WORLD);
 	
 	cout << "[P" << currentProcess << "] Running process " << currentProcess << " of " << processCount << "." << endl;
@@ -41,6 +43,10 @@ int main(int argc, char *argv[])
 	
 	delete process;
 	delete graph;
+
+	if (currentProcess == 0) {
+		cout << endl << endl << "time: " << (MPI_Wtime() - startSeconds) << endl;
+	}
 	
 	MPI_Finalize();
 	
