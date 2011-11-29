@@ -83,8 +83,8 @@ public:
 	EdgeCombination * deserializeCombination(char *) const;
 
 	// kolik cyklu ma probehnout pred kontrolou zprav
-	static const int TIMEOUT = 10;
-	static const int MASTER_TIMEOUT = 4;
+	static const int TIMEOUT = 100;
+	static const int MASTER_TIMEOUT = 50;
 
 	static const int CMD_JOB = 1;
 	static const int CMD_NEWBEST = 2;
