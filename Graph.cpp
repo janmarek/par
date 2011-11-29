@@ -27,7 +27,8 @@ void Graph::addEdge(int node1, int node2)
 	vector<int> edge(2, 0);
 	edge[0] = node1;
 	edge[1] = node2;        
-	this->edges.push_back(edge);
+	this->edges.push_back(edge);    
+    this->trivialLimit = this->edgeCount / 2;
 }
 
 vector<int> Graph::getEdge(int i)
@@ -119,5 +120,9 @@ bool Graph::testEdge(int node1, int node2, EdgeCombination * c, Color colorToBeT
         }
     }
     return true;
+}
+int Graph::getTrivialPriceLimit()
+{            
+    return this->trivialLimit;
 }
 

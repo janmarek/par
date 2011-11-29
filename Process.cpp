@@ -101,7 +101,8 @@ bool Process::checkSolution(EdgeCombination * c)
 	Solution * s = new Solution(graph, c);
 
 	// triangle test and price test
-	if (graph->testTriangleOk(iter->getCurrent()) && (myBestPrice == -1 || myBestPrice > s->getPrice())) {
+    
+	if (s->getPrice() <= graph->getTrivialPriceLimit() &&  graph->testTriangleOk(iter->getCurrent()) && (myBestPrice == -1 || myBestPrice > s->getPrice())) {
 		// update data
 		myBestPrice = s->getPrice();
 
